@@ -1,3 +1,6 @@
+#Ignore the dataset given (too large to be pushed)
+dataset_project_iapr2025
+
 #MacOS specific files
 .DS_Store
 # Byte-compiled / optimized / DLL files
