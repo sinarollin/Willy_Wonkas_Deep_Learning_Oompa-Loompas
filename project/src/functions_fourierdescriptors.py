@@ -24,7 +24,7 @@ def get_fourier_descriptors(contour, k=5, normalize=True):
 
     return fourier_desc[:k]
 
-def load_reference_hists(ref_dir, HIST_BINS=16, HIST_CHANNELS=[0, 1], HIST_RANGES=[0, 180, 0, 256], HIST_METHOD=cv2.HISTCMP_CORREL):
+def load_reference_hists(ref_dir, HIST_BINS=16, HIST_CHANNELS=[0, 1], HIST_RANGES=[0, 180, 0, 256]):
     refs = {}
     
     for fn in sorted(os.listdir(ref_dir)):
