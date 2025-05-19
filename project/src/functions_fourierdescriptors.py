@@ -212,8 +212,8 @@ def combined_classifier(cont_F, patch_bgr, patch_mask, refs, HIST_BINS=16, HIST_
     score_df['norm_F'] = 1 - (score_df['score_F'] - score_df['score_F'].min()) / (score_df['score_F'].max() - score_df['score_F'].min() + 1e-6)
 
     # Combine normalized scores with weights (adjust as needed)
-    alpha = 0.35
-    score_df['combined'] = alpha * score_df['norm_H'] + (0.1-alpha) * score_df['norm_F']
+    alpha = 0.55
+    score_df['combined'] = alpha * score_df['norm_H'] + (1-alpha) * score_df['norm_F']
 
     # Find best class
     best_row = score_df.loc[score_df['combined'].idxmax()]
