@@ -28,9 +28,12 @@ def load_reference_hists(ref_dir, HIST_BINS=16, HIST_CHANNELS=[0, 1], HIST_RANGE
     refs = {}
     
     for fn in sorted(os.listdir(ref_dir)):
+        # print(fn)
+        print("Ref dir: ", ref_dir)
         if not fn.lower().endswith('.png'):
             continue
         cls_name = os.path.splitext(fn)[0]
+        print(f"Loading reference '{cls_name}'")
         img = cv2.imread(os.path.join(ref_dir, fn))
         if img is None:
             raise IOError(f"Could not load {fn}")
@@ -49,10 +52,11 @@ def load_reference_hists(ref_dir, HIST_BINS=16, HIST_CHANNELS=[0, 1], HIST_RANGE
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
         if not contours:
+            print(f"No contours found in {fn}")
             return None
-
+        
         contour = max(contours, key=cv2.contourArea)
-        F_contour = get_fourier_descriptors(contour)
+        F_contour = get_fourier_descriptors(contour, k=5, normalize=True)
 
         refs[cls_name] = (hist, F_contour)
 
@@ -208,7 +212,8 @@ def combined_classifier(cont_F, patch_bgr, patch_mask, refs, HIST_BINS=16, HIST_
     score_df['norm_F'] = 1 - (score_df['score_F'] - score_df['score_F'].min()) / (score_df['score_F'].max() - score_df['score_F'].min() + 1e-6)
 
     # Combine normalized scores with weights (adjust as needed)
-    score_df['combined'] = 0.35 * score_df['norm_H'] + 0.65 * score_df['norm_F']
+    alpha = 0.35
+    score_df['combined'] = alpha * score_df['norm_H'] + (0.1-alpha) * score_df['norm_F']
 
     # Find best class
     best_row = score_df.loc[score_df['combined'].idxmax()]

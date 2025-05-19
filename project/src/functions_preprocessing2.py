@@ -41,7 +41,7 @@ def extract_chocolate(image):
     cv2.drawContours(hull_mask, [hull], -1, 255, thickness=-1)
     extracted = cv2.bitwise_and(image, image, mask=hull_mask)
 
-    return extracted, (x, y, w_box, h_box)
+    return extracted, (x, y, w_box, h_box), hull
 
 
 
