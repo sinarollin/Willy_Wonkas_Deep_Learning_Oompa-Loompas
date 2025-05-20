@@ -21,7 +21,7 @@ def plot_rgb_distribution(color_data):
 
     Returns
     -------
-    No return.
+    No return but plots the RGB distribution.
     """
 
     _, ax = plt.subplots(figsize=(12, 8))
@@ -35,7 +35,7 @@ def plot_rgb_distribution(color_data):
             rgb_norm = tuple([c / 255 for c in color])
             ax.add_patch(mpatches.Rectangle((x, 0), 1, 1, color=rgb_norm))
             x += 1
-        #draw a vertical line for each color set to distinguish them
+        #draw a vertical line for each color set to distinguish between them
         ax.axvline(x=x, color='white', linewidth=1.5, linestyle='-')
         yticks.append((x - len(colors) / 2))
         ylabels.append(name)
@@ -56,18 +56,18 @@ def plot_rgb_distribution(color_data):
 
 def rgb_to_hsv(rgb):
     """
-    Converts a pixel from RGB color to HSV color space.
+    Converts a pixel from the RGB to the HSV color space.
     
     Parameters
     ----------
     
     rgb : tuple
-        A tuple of three integers representing the RGB color.
+        The RGB color.
         
     Returns
     -------
     hsv : tuple
-        A tuple of three integers representing the HSV color.
+        The HSV color.
     """
     color = np.uint8([[rgb]])
     hsv = cv2.cvtColor(color, cv2.COLOR_RGB2HSV)
@@ -76,9 +76,9 @@ def rgb_to_hsv(rgb):
 
 def create_combined_mask_rgb(image_rgb, color_data, tolerance=(30, 30, 30), kernel_fill=30, kernel_open=25):
     """
-    Create a combined mask in RGB color space.
-    The mask comprises the returning pixels of the image comprised whithin the given tolerance of at least one of the reference colors
-    Closing and opening are applied to the mask to fill the holes in the mask.
+    Create a combined mask in RGB color space.The mask comprises the returning pixels of the image comprised 
+    within the given tolerance of at least one of the reference colors. Closing and opening are applied to the 
+    mask to fill the holes and remove the noise in the mask.
 
     Parameters
     ----------
@@ -98,29 +98,27 @@ def create_combined_mask_rgb(image_rgb, color_data, tolerance=(30, 30, 30), kern
 
     for _, rgb_colors in color_data.items():
         for rgb in rgb_colors:
-            # Define lower and upper bounds for the color with tolerance
             lower = np.array([max(c - t, 0) for c, t in zip(rgb, tolerance)], dtype=np.uint8)
             upper = np.array([min(c + t, 255) for c, t in zip(rgb, tolerance)], dtype=np.uint8)
 
             mask = cv2.inRange(image_rgb, lower, upper)
 
-            # Combine the mask with the overall mask
             combined_mask = cv2.bitwise_or(combined_mask, mask)
     
-    # # Apply morphological operations to fill small holes and remove noise
+    #apply morphological operations to fill small holes and remove noise
     kernel_fill = np.ones((kernel_fill, kernel_fill), np.uint8)
     kernel_open = np.ones((kernel_open, kernel_open), np.uint8)
-    combined_mask = cv2.morphologyEx(combined_mask, cv2.MORPH_CLOSE, kernel_fill)  # Fill small holes
-    combined_mask = cv2.morphologyEx(combined_mask, cv2.MORPH_OPEN, kernel_open)   # Remove noise
+    combined_mask = cv2.morphologyEx(combined_mask, cv2.MORPH_CLOSE, kernel_fill)  #fill small holes
+    combined_mask = cv2.morphologyEx(combined_mask, cv2.MORPH_OPEN, kernel_open)   #remove noise
 
     return combined_mask
 
 
 def create_combined_mask_hsv(image_bgr, color_data, tolerance=(5, 40, 30), kernel_fill=20, kernel_open=20):
     """
-    Creates a combined mask for the given image using the HSV color space.
-    The mask comprises the returning pixels of the image comprised whithin the given tolerance of at least one of the reference colors
-    Closing and opening are applied to the mask to fill the holes in the mask.
+    Creates a combined mask for the given image using the HSV color space. The mask comprises the returning
+    pixels of the image comprised within the given tolerance of at least one of the reference colors.
+    Closing and opening are applied to the mask to fill the holes and remove the noise in the mask.
 
     Parameters
     ----------
@@ -161,8 +159,8 @@ def create_combined_mask_hsv(image_bgr, color_data, tolerance=(5, 40, 30), kerne
     #Morphological operations
     kernel_fill = np.ones((kernel_fill, kernel_fill), np.uint8)
     kernel_open = np.ones((kernel_open, kernel_open), np.uint8)
-    combined_mask = cv2.morphologyEx(combined_mask, cv2.MORPH_CLOSE, kernel_fill)  # Fill small holes
-    combined_mask = cv2.morphologyEx(combined_mask, cv2.MORPH_OPEN, kernel_open)   # Remove noise
+    combined_mask = cv2.morphologyEx(combined_mask, cv2.MORPH_CLOSE, kernel_fill)  #fill small holes
+    combined_mask = cv2.morphologyEx(combined_mask, cv2.MORPH_OPEN, kernel_open)   # remove noise
 
     return combined_mask
 
@@ -187,6 +185,7 @@ def classify_group(mean_rgb, mean_hsv, dist):
     categorical: string    
         The group of the object.
     """
+    #The following values were determined by trial and error
 
     #White Background
     if mean_hsv[0] < 15 and mean_hsv[1] < 7 and dist < 116 and dist >68:
