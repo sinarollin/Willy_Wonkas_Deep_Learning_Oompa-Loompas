@@ -16,8 +16,12 @@ def plot_rgb_distribution(color_data):
 
     Parameters
     ----------
-    color_data : The chocolates and their corresponding RGB values.
+    color_data : dict
+        The chocolates and their corresponding RGB values.
 
+    Returns
+    -------
+    No return.
     """
 
     _, ax = plt.subplots(figsize=(12, 8))
@@ -52,15 +56,18 @@ def plot_rgb_distribution(color_data):
 
 def rgb_to_hsv(rgb):
     """
-    Converts an RGB color to HSV color space.
+    Converts a pixel from RGB color to HSV color space.
     
     Parameters
     ----------
-    rgb : The RGB color.
+    
+    rgb : tuple
+        A tuple of three integers representing the RGB color.
         
     Returns
     -------
-    hsv :The HSV color.
+    hsv : tuple
+        A tuple of three integers representing the HSV color.
     """
     color = np.uint8([[rgb]])
     hsv = cv2.cvtColor(color, cv2.COLOR_RGB2HSV)
@@ -70,16 +77,22 @@ def rgb_to_hsv(rgb):
 def create_combined_mask_rgb(image_rgb, color_data, tolerance=(30, 30, 30), kernel_fill=30, kernel_open=25):
     """
     Create a combined mask in RGB color space.
+    The mask comprises the returning pixels of the image comprised whithin the given tolerance of at least one of the reference colors
+    Closing and opening are applied to the mask to fill the holes in the mask.
 
     Parameters
     ----------
-    image_rgb: Input image in RGB format.
-    color_data: Dictionary of reference colors.
-    tolerance: Tolerance for color matching (R, G, B).
+    image_rgb: numpy.ndarray 
+        Input image in RGB format.
+    color_data: dict
+        Dictionary of reference colors.
+    tolerance: tuple
+        Tolerance for color matching (R, G, B).
 
     Returns
     -------
-    Combined mask.
+    combined_mask: numpy.ndarray
+        The combined mask of the detected colors.
     """
     combined_mask = np.zeros(image_rgb.shape[:2], dtype=np.uint8)
 
@@ -106,7 +119,9 @@ def create_combined_mask_rgb(image_rgb, color_data, tolerance=(30, 30, 30), kern
 def create_combined_mask_hsv(image_bgr, color_data, tolerance=(5, 40, 30), kernel_fill=20, kernel_open=20):
     """
     Creates a combined mask for the given image using the HSV color space.
-    
+    The mask comprises the returning pixels of the image comprised whithin the given tolerance of at least one of the reference colors
+    Closing and opening are applied to the mask to fill the holes in the mask.
+
     Parameters
     ----------
     image_bgr : numpy.ndarray
@@ -160,13 +175,17 @@ def classify_group(mean_rgb, mean_hsv, dist):
 
     Parameters
     ----------
-    mean_rgb : The mean RGB values.
-    mean_hsv : The mean HSV values.
-    dist : The distance to a reference colour.
+    mean_rgb : tuple
+        The mean RGB values.
+    mean_hsv : tuple
+        The mean HSV values.
+    dist : int
+        The maximal distance to a reference colour.
 
     Returns
     -------
-    The group of the object.
+    categorical: string    
+        The group of the object.
     """
 
     #White Background
@@ -183,3 +202,4 @@ def classify_group(mean_rgb, mean_hsv, dist):
         return "Blue Book"
     #Other
     return "Other"
+
