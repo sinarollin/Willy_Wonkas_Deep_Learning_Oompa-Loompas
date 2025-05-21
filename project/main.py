@@ -25,6 +25,7 @@ os.makedirs(TEST_PRED,   exist_ok=True)
 
 
 MIN_AREA    = 10000
+MAX_AREA = 700000
 MORPH_KSIZE = 9
 MORPH_KERNEL_SIZE = 9
 
@@ -174,7 +175,7 @@ for idx, row in tqdm(sample.iterrows(), total=len(sample)):
     for c in contours:
         if cv2.contourArea(c) < MIN_AREA: 
             continue
-        elif cv2.contourArea(c) > 700000:
+        elif cv2.contourArea(c) > MAX_AREA:
             # print("Too big", fn, cv2.contourArea(c))
             continue
         
