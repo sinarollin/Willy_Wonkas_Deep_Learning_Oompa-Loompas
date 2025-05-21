@@ -10,9 +10,9 @@ from sklearn.pipeline import make_pipeline
 from collections import Counter
 from src.functions_main import *
 
-ANN_JSON    = '2D-on-2D_annotations_combined90.json'
-TRAIN_IMG   = '../train' #Put the path to the train folder here
-TEST_IMG    = '../test' #Put the path to the test folder here
+ANN_JSON    = 'src/2D-on-2D_annotations_combined90.json'
+TRAIN_IMG   = './dataset_project_iapr2025/train' #Put the path to the train folder here
+TEST_IMG    = './dataset_project_iapr2025/test' #Put the path to the test folder here
 TEST_PRED   = Path('test_pred')
 SUB_SAMPLE  = 'sample_submission.csv'
 SUB_OUT     = 'submission_classic_new.csv'

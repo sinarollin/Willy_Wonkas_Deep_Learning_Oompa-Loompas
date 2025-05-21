@@ -164,6 +164,19 @@ def create_combined_mask_hsv(image_bgr, color_data, tolerance=(5, 40, 30), kerne
     return combined_mask
 
 def lab_mask(preproc_rgb):
+    """
+    Create a mask for a given image using the LAB color space.
+
+    Parameters
+    ----------
+    preproc_rgb : numpy.ndarray
+        Input image in RGB format.
+
+    Returns
+    -------
+    mask : numpy.ndarray
+        The mask of the detected colors.
+    """
     lab = cv2.cvtColor(preproc_rgb, cv2.COLOR_RGB2LAB)
     l_channel, a, b = cv2.split(lab)
 
@@ -181,6 +194,19 @@ def lab_mask(preproc_rgb):
     return mask
 
 def extract_descriptor(patch):
+    """
+    Extracts a descriptor from a given patch.
+
+    Parameters
+    ----------
+    patch : numpy.ndarray
+        The patch to extract the descriptor from.
+
+    Returns
+    -------
+    descriptor : numpy.ndarray
+        The descriptor of the patch.
+    """
     gray = cv2.cvtColor(patch, cv2.COLOR_BGR2GRAY)
     gray = cv2.resize(gray, REF_SIZE)
     # HOG
