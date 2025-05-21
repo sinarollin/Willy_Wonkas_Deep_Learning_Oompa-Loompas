@@ -1,4 +1,4 @@
-#Authors
+#Authors: Timo Michoud, Sina Röllin, Veronika Podliesnova
 
 
 #Import necessary libraries
